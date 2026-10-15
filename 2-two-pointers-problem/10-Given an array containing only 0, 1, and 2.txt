@@ -1,0 +1,64 @@
+Given an array containing only 0, 1, and 2, sort the array in ascending order in place without using a sorting function.
+
+Input: arr = [2, 0, 2, 1, 1, 0]
+Output: [0, 0, 1, 1, 2, 2]
+
+Approach #1
+------------
+
+-> sort the array in ascending order
+-> time complexity - N log (N) and Space complexity - O(N)
+
+
+Approach #2
+-----------
+
+-> declare 3 variables, count0,count1 and count2
+-> iterate source arr and get values of declared values
+-> then iterate source arr again and initialize with 0 from beg as per count0, then initialize with 1 as per count1 value and 
+   then initialize with 2 as per count2 value.
+
+TC - we are iterating arr 2 times comletely - O(N) + O(N) = O(2N)
+SC - we are not taking any extra space - O(1) i.e. constant
+
+function sortArr(arr){
+  let count0 = 0;
+  let count1 = 0;
+  let count2 = 0;
+
+  for(let i=0;i<arr.length;i++){
+    if(arr[i] === 0){
+      count0++;
+    }else if(arr[i] === 1){
+      count1++;
+    }else{
+      count2++;
+    }
+  }
+
+  for(let i=0;i<count0;i++){
+    arr[i] = 0;
+  }
+  for(let i=count0;i<(count0+count1);i++){
+    arr[i] = 1;
+  }
+  for(let i=(count0+count1);i<(count0+count1+count2);i++){
+    arr[i] = 2;
+  }
+
+  console.log(arr)
+}
+
+sortArr([2, 0, 2, 1, 1, 0]);
+sortArr([2, 0, 2, 1, 1, 0,0,1,1,1,2,2,2,2]);
+
+
+
+Approach #3 
+------------------------------------------
+
+2 pointer approach ? (thought process and intution)
+
+
+
+

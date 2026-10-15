@@ -1,0 +1,181 @@
+Move Zeroes to End — Two Pointer Approach
+*****************************************
+
+-> First discuss brute force approach [written in notes, write it here]
+
+-> then come to next solution
+
+
+Core Intuition
+----------------
+
+- All elements before the first zero are already in their correct places: If an array starts with [1, 5, 3, 0...], the first three numbers do not need to move at all.   
+
+- j always marks the first available zero: Once j is placed at the first 0, any non-zero element found later by i can simply swap places with arr[j].   
+
+
+- The zero naturally rolls forward: When you swap arr[i] (a non-zero number) with arr[j] (a zero), that zero moves to index i, and index j receives the correct number. Incrementing j (j++) ensures j immediately lands on the next zero in line.  
+
+
+
+Step-by-Step Breakdown
+------------------------
+
+Step 1: Find the first zero (j)   
+
+	Initialize j = -1.   
+	Iterate through the array from 0 to n - 1.   
+	The moment you see arr[i] == 0, 
+	assign j = i and break immediately.   
+	(Edge case: If j == -1 after the loop, the array has no zeroes at all, so return early.)
+
+Step 2: Iterate and Swap   
+
+	Start a pointer i from j + 1 up to n - 1.   
+	Whenever arr[i] != 0:   
+		swap(arr[i], arr[j])   
+		j++   
+	If arr[i] == 0, simply continue (i moves forward, j waits).   
+
+Tracing with the Example from the ImageInput array: arr = [1, 0, 2, 3, 2, 0, 0, 4, 5, 1]   
+
+
+Example:
+--------------
+
+Here is the step-by-step trace of how the algorithm processes the exact array from the board:
+
+**Input:** `arr = [1, 0, 2, 3, 2, 0, 0, 4, 5, 1]`
+
+---
+
+### Step 1: Locate the First Zero
+
+We run the first loop to find where zeroes begin:
+
+* Index 0: value is `1` (not zero).
+* Index 1: value is `0`  set `j = 1` and break.
+
+
+Start: arr = [1, 0, 2, 3, 2, 0, 0, 4, 5, 1], j = 1
+
+i = 2 (arr[2] = 2): arr[2] !== 0 -> swap arr[1], arr[2], j++ (j = 2) -> [1, 2, 0, 3, 2, 0, 0, 4, 5, 1]
+
+i = 3 (arr[3] = 3): arr[3] !== 0 -> swap arr[2], arr[3], j++ (j = 3) -> [1, 2, 3, 0, 2, 0, 0, 4, 5, 1]
+
+i = 4 (arr[4] = 2): arr[4] !== 0 -> swap arr[3], arr[4], j++ (j = 4) -> [1, 2, 3, 2, 0, 0, 0, 4, 5, 1]
+
+i = 5 (arr[5] = 0): zero, do nothing (j = 4) -> [1, 2, 3, 2, 0, 0, 0, 4, 5, 1]
+
+i = 6 (arr[6] = 0): zero, do nothing (j = 4) -> [1, 2, 3, 2, 0, 0, 0, 4, 5, 1]
+
+i = 7 (arr[7] = 4): arr[7] !== 0 -> swap arr[4], arr[7], j++ (j = 5) -> [1, 2, 3, 2, 4, 0, 0, 0, 5, 1]
+
+i = 8 (arr[8] = 5): arr[8] !== 0 -> swap arr[5], arr[8], j++ (j = 6) -> [1, 2, 3, 2, 4, 5, 0, 0, 0, 1]
+
+i = 9 (arr[9] = 1): arr[9] !== 0 -> swap arr[6], arr[9], j++ (j = 7) -> [1, 2, 3, 2, 4, 5, 1, 0, 0, 0]
+
+
+====================================
+
+
+PSEUDO CODE  and ALGORITHM
+------------------------------
+
+ALGORITHM:
+
+- Find the first zero in the array:
+
+	Initialize j = -1
+
+	Traverse the array from index 0 to n - 1
+
+	If arr[i] === 0, set j = i and break
+
+- If no zero is found (j === -1), return the array directly.
+
+- Iterate pointer i from j + 1 to n - 1:
+
+	- If arr[i] !== 0:
+
+		- Swap arr[i] and arr[j]
+
+		- Increment j (j++)
+
+	- Return the modified array.
+
+PSEUDOCODE:
+
+function moveZeroes(arr, n):
+j = -1
+
+// Step 1: Find the first 0
+for i from 0 to n - 1:
+    if arr[i] == 0:
+        j = i
+        break
+        
+// If no zeroes are in the array
+if j == -1:
+    return arr
+    
+// Step 2: Swap non-zero elements into index j
+for i from j + 1 to n - 1:
+    if arr[i] != 0:
+        swap(arr[i], arr[j])
+        j++
+        
+return arr
+
+
+
+CODE
+-----
+
+// Step 1: Find index of the first zero
+for (let i = 0; i < n; i++) {
+    if (arr[i] === 0) {
+        j = i;
+        break;
+    }
+}
+
+// Edge case: If there are no zeroes, array is already done
+if (j === -1) return arr;
+
+// Step 2: Shift non-zeroes forward via swaps
+for (let i = j + 1; i < n; i++) {
+    if (arr[i] !== 0) {
+        // Swap arr[i] and arr[j]
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+        
+        j++;
+    }
+}
+
+return arr;
+
+
+Space and Time complexity
+--------------------------
+
+
+*************************************
+
+Suppose if in interview it is asked to like instead of moving zeroes to end, move them in beginning of array
+
+then share your approach:
+
+Core Intuition
+
+- To move all zeroes to the beginning while keeping the relative order of non-zero numbers, you simply reverse the direction of traversal: scan from right to left instead of left to right.
+
+- Find the last zero from the right: Everything to the right of this zero is already a non-zero element in its correct place.
+
+- j points to the available zero slot: Moving backwards, whenever i encounters a non-zero number, swap it with arr[j] and decrement j (j--).
+
+- This pushes all non-zero numbers toward the end of the array and packs zeroes to the front.
+
+write the code by your own

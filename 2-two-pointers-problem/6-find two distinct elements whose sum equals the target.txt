@@ -1,0 +1,50 @@
+Given a sorted array of integers and a target value, find two distinct elements whose sum equals the target.
+
+Input: arr = [2, 7, 11, 15], target=9
+Output:      [1, 2]
+
+
+Approach #1 Brute Force
+-----------------------
+
+Use two nested loops: outer loop starts at i = 0, and inner loop starts at j = i + 1. Compare the sum of both elements with the target.
+
+Approach #2 two pointer
+-----------------------
+
+
+-> Since the array is sorted in ascending order, the smallest element is at the beginning and the largest element is at the end.
+
+-> Initialize two pointers: left to starting of arr and right to end of array and calculate sum of both elements
+
+-> if sum === k then return left+1,right+1 since we got the index of element that sums up k
+
+-> if sum > k then decrement the right index since we need sum less than what we got
+
+-> if sum < k then increment left index since we need bigger sum value
+
+-> iterate till left < right
+
+# code
+
+function findSum(arr,k){
+
+  let left = 0;
+  let right = arr.length-1;
+
+  while(left < right){
+    let target = arr[left] + arr[right];
+    if(target === k){
+      return [left+1,right+1];
+    } else if(target > k){
+      right--;
+    } else{ 
+      left++;
+    }
+  }
+}
+
+console.log(findSum([2, 7, 11, 15], 9));
+
+TC - O(N) - single iteration
+SC - O(1) - constant since we are not creating any new arr

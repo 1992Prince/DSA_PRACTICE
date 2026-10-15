@@ -1,0 +1,94 @@
+Given a sorted array of integers, return a new array containing the squares of every number, also sorted in ascending order.
+
+Input: arr = [-7, -3, 2, 3, 11]
+Output: [4, 9, 9, 49, 121]
+
+
+Approach #1 (brute force)
+-------------------------
+-> declare a new arr
+-> iterate the source arr and multiple each ele with itself and assign to same index in new arr.
+-> e.g. sqr of this arr [-7, -3, 2, 3, 11] will give new arr [ 49, 9, 4, 9, 121 ] wch is not sorted.
+-> now sort the arr2
+
+#code
+
+let arr = [-7, -3, 2, 3, 11]
+let arr2 = []
+
+for(let i=0;i<arr.length;i++){
+  arr2[i] = arr[i] * arr[i];
+}
+
+arr2.sort((a,b) => a-b);
+console.log(arr2); # [ 4, 9, 9, 49, 121 ]
+
+TC : O(N) + N log (N)
+SC : O(N) since we are creating new arr
+
+
+Approach #2 (two pointer)
+--------------------------
+
+The main logic to remember
+1. The original array is sorted, so the largest absolute value must be at one of the two ends.
+2. Compare the absolute values at left and right.
+3. Put the larger square at the end of the new array.
+4. Move only the pointer whose element was used, and decrement k.
+5. Repeat until all elements have been processed.
+
+- Since the input array is sorted, the element with the maximum absolute value must be at either end of the array. 
+- So, the middle element cannot have a larger absolute value than both ends, and therefore, it cannot produce the largest square.
+- That's why we place our two pointers at the beginning and the end of the array and compare their absolute values.
+
+	[-7, -3, 2, 3, 11]
+	  L             R   => [_ ,_ ,_ ,_ ,_]
+	  
+	  L         R       => [_ ,_ ,_ ,_ ,121]
+	  
+	     L      R       => [_ ,_ ,_ ,49 ,121]
+		 
+		 L   R          => [_ ,_ ,9 ,49 ,121]
+		 
+		     L,R        => [_ ,9 ,9 ,49 ,121]
+			 
+	now both L and R pointers are pointing to index2 so [4 ,9 ,9 ,49 ,121]
+	  
+
+
+#code
+
+
+function sortArr(arr){
+
+  let newArr = [];
+
+  let left=0;
+  let right=arr.length-1;
+  let k = right;
+
+  while(left <= right){
+    if(Math.abs(arr[left]) > Math.abs(arr[right])){
+      newArr[k] = Math.abs(arr[left]) * Math.abs(arr[left]);
+      left++;
+      k--
+    }else{
+      newArr[k] = Math.abs(arr[right]) * Math.abs(arr[right]);
+      right--;
+      k--
+    }
+  }
+
+  console.log(newArr);
+}
+
+sortArr([-7, -3, 2, 3, 11]);
+
+TC - O(N) - single iteration
+SC - O(N) - new array declaration
+
+
+
+
+
+

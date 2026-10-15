@@ -1,0 +1,52 @@
+Given two sorted arrays, merge them into a single sorted array.
+
+Input: arr1 = [1, 3, 5, 7], arr2 = [2, 4, 6, 8]
+Output: 1, 2, 3, 4, 5, 6, 7, 8]
+
+
+Approach #1 brute force
+------------------------
+
+-> create new arr of given both arr size and copy all elements to new arr 
+-> sort the elements and copy all elements back to source arr
+
+
+Approach #2 two pointer
+--------------------------
+
+-> Compare the current elements of both arrays and insert the smaller one into sortedArr.
+-> Increment the pointer of the array from which you took the element, and increment k.
+-> Once one array is exhausted, copy all remaining elements from the other array.
+
+function arrMergeSorted(arr1,arr2){
+  let sortedArr = [];
+  let i=0;
+  let j=0;
+  let k=0;
+  
+  while(i < arr1.length && j < arr2.length){
+    if(arr1[i] < arr2[j]){
+      sortedArr[k] = arr1[i];
+      i++;
+      k++;
+    }else{
+      sortedArr[k] = arr2[j];
+      j++;
+      k++;
+    }
+  }
+
+  while(i < arr1.length){
+    sortedArr[k] = arr1[i];
+    i++;
+    k++
+  }
+  while(j < arr2.length){
+    sortedArr[k] = arr2[j];
+    j++;
+    k++
+  }
+  console.log(sortedArr);
+}
+
+arrMergeSorted([1, 3, 5, 7], [2,4,6,8]);  # [1,2,3,4,5,6,7,8]

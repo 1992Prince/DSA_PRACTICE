@@ -1,0 +1,50 @@
+Given an array and an integer k, remove all occurrences of k in place.
+
+Input: arr = [3, 2, 2, 3, 4, 2, 5], k =2
+Output: [3, 3, 4, 5]
+
+
+Approach #1 brute force
+------------------------
+
+-> get count of ele that are !== k and declare new arr with same size
+-> copy all elements to new arr or Arraylist by iterating source arr
+-> then iterate the new arr or Arraylist and copy the elems to source array and return the i+1 the count
+
+TC - O(N) + O(N) = O(2N)
+SC - O(N) as creating new arr
+
+
+
+Approach #2 two pointer
+-------------------------
+
+
+-> since we need to remove the k elements from arr.
+-> declare two pointer i,j and both should start from 0.
+-> i will track the index where next non k element will be kept and j will track all elements from arr
+
+so what j will do is j will check is arr[j] element is non k the copy it in arr[i] position and then increment in
+
+#code
+
+function removeKEles(arr,k){
+
+  let i=0;
+  for(let j=0;j<arr.length;j++){
+    if(arr[j] !== k){
+      arr[i] = arr[j];
+      i++;
+    }
+  }
+
+  console.log(arr);
+}
+
+removeKEles([3, 2, 2, 3, 4, 2, 5],2) 
+
+#output [3, 3, 4, 5, 4, 2, 5 ]
+
+TC - O(N) single iteration
+SC - O(1) constant
+

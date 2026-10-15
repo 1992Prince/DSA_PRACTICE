@@ -1,0 +1,58 @@
+Given an integer array, rearrange it so that all even numbers appear before all odd numbers.
+
+Input: arr = [3, 1, 2, 4, 7, 6]
+Output: [6, 4, 2, 1, 7, 3]
+
+
+
+Approach #1 Brute Force
+----------------------
+
+-> declare 2 arrays or ALs, and in one array keep all even nums and in another keep all odd nums
+-> then iterate the even arr and copy all elements to source arr and then remaining odd eles of another arr to source arr.
+-> to track index for even and odd indexes , u need to declare one counter for tracking purpose.
+
+TC - O(N) for iterating source arr + O(N) for iterating even and odd arrs
+SC - O(N) + O(N) = O(2N) for creating two arrs or ArrayLists
+
+
+Approach #2 Two-Pointer
+-------------------------
+
+-> We need to keep all even numbers on the LHS and all odd numbers on the RHS of the array.
+
+-> Declare two pointers: left = 0 to point to the first index and right = arr.length - 1 to point to the last index.
+
+-> If the element at left is even, increment left. If the element at right is odd, decrement right.
+
+-> Once left points to an odd number and right points to an even number, swap both elements and move both pointers inward.
+
+-> Continue until left < right is no longer true.
+
+
+#code
+
+function arrArrangement(arr){
+
+  let left = 0;
+  let right = arr.length-1;
+
+  while(left < right){
+    if(arr[left] % 2 !== 0 && arr[right] % 2 === 0){
+      let temp = arr[left];
+      arr[left] = arr[right];
+      arr[right] = temp;
+    } else if (arr[left] % 2 === 0){
+      left++;
+    }else{
+      right--;
+    }
+  }
+
+  console.log(arr);
+}
+
+arrArrangement([3, 1, 2, 4, 7, 6])
+
+TC - O(N) - single iteration
+SC - O(1) constant since no new arr declaration 

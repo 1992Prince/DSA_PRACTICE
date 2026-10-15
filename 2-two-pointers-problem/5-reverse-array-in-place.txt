@@ -1,0 +1,45 @@
+Reverse an array without creating another array.
+
+Input: arr = [1, 2, 3, 4, 5]
+Output: [5, 4, 3, 2, 1]
+
+
+Approach #1
+-----------
+
+-> declare new arr
+-> iterate source arr from end and copy elements to new arr
+-> again copy the elements of new arr to source arr
+
+TC - O(N) + O(N)
+SC - O(N) since we are declaring new arr
+
+
+Approach #2
+------------
+
+Two pointer approach
+
+-> keep left at start of arr and right at end of arr
+-> swap both pointers with each other and increment left and decrement right
+-> do it till left < right
+
+#code
+
+function reverseArr(arr){
+
+  let left = 0;
+  let right = arr.length-1;
+
+  while(left < right){
+    let temp = arr[left];
+    arr[left] = arr[right];
+    arr[right] = temp;
+    left++;
+    right--;
+  }
+
+  console.log(arr);
+}
+
+reverseArr([1, 2, 3, 4, 5])

@@ -1,0 +1,44 @@
+
+Given an array of integers, find the element that appears more than n // 2 times, where n is the length of the array. If no such element exists, return -1.
+
+Input: arr = [2, 2, 1, 1, 2, 2, 2]
+Output: 2
+
+
+Approach #1 brute force hashing
+-------------------------------------
+
+-> create a new map and add all elements and its frequencies
+-> then iterate the map and validate for wch key its value is greater than n//2 and return that element
+
+function findEle(arr){
+
+  let k = Math.floor(arr.length / 2);
+  let map = new Map();
+  for(let i=0;i<arr.length;i++){
+    if(map.has(arr[i])){
+      map.set(arr[i], map.get(arr[i]) + 1);
+    }else{
+      map.set(arr[i], 1);
+    }
+  }
+
+  for(let [key,val] of map){
+    if(val > k){
+      console.log("Element greater than k is : ", key);
+      break;
+    }
+  }
+}
+
+findEle([2, 2, 1, 1, 2, 2, 2])
+
+
+
+Approach #2 Moore Voting Algorithm - single pass
+-----------------------------------------------------
+
+?
+
+https://www.youtube.com/watch?v=nP_ns3uSh80
+

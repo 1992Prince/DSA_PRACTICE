@@ -1,0 +1,89 @@
+Given an array where each element represents a stock price on a particular day, find the maximum profit possible from one purchase followed by one sale. You must buy before you sell. If no profit is possible, return 0.
+
+Input: prices = [7, 1, 5, 3, 6, 4]
+Output: 5
+
+Given an array of integers, find the maximum value of arr[j] - arr[i], where j > i. The second element must appear after the first element in the array.
+
+Input: arr = [2, 3, 10, 6, 4, 8, 1]
+Output: 8
+
+
+Approach 1# brute force
+-----------------------
+
+-> using nested forloop to find maxProfit and tracking it
+
+function maxProfit(arr){
+
+  let maxProfit = -Infinity;
+
+  for(let i=0;i<arr.length;i++){
+    for(let j=i+1;j<arr.length;j++){
+      let diff = arr[j] - arr[i];
+      if(diff > maxProfit){
+        maxProfit = diff;
+      }
+    }
+  }
+
+  return maxProfit;
+}
+
+console.log(maxProfit([2, 3, 10, 6, 4, 8, 1]));
+console.log(maxProfit([7, 1, 5, 3, 6, 4]));
+
+
+
+Approach #2 single pass
+---------------------------
+
+-> here we are given stock value daily like e.g. 
+   [7, 1, 5, 3, 6, 4]
+    1  2  3  4  5  6
+	
+	on first day stock price is 7 
+	on second day stock price is 1
+	   third                     5
+	   ....
+
+-> we need to make maximum profit and we need to buy the stock first and sell it later.
+
+-> In above example if we buy stock on 2nd day i.e. stock price 1 and sell it on 5th day i.e. stock price 6,
+   then we are making maximum profit i.e. 6 - 1 = 5
+   
+-> Here intution says to get max profit , buying price should be minimum and selling price should be maximum
+
+-> and we will iterate the array and find maximum profit by tracking minimum value behind.
+
+-> suppose minimum stock price is on 1st day and we will be selling it from second day
+
+-> So for loop will start from 1 and not 0 till end of array
+
+-> inside the loop, find currentProfit and update overall profit
+   then update the min val 
+
+
+function maxProfit(arr){
+
+  let min = arr[0];
+  let profit = 0;
+
+  for(let i=1;i<arr.length;i++){
+    // find current profit and update overall profit
+    let currProfit = arr[i] - min;
+    profit = Math.max(profit, currProfit);
+
+    // update min
+    min = Math.min(min, arr[i])
+  }
+
+  return profit;
+}
+
+console.log(maxProfit([2, 3, 10, 6, 4, 8, 1]));
+console.log(maxProfit([7, 1, 5, 3, 6, 4]));
+
+
+TC - O(N)
+SC - O(1)

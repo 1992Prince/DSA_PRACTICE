@@ -1,0 +1,76 @@
+Given an array of integers, find the first index where the sum of all elements to the left equals the sum of all elements to the right. 
+The element at the index itself is excluded from both sums. 
+If no equilibrium index exists, return -1.
+
+Input: arr = [1, 3, 5, 2, 2]
+Output: 2
+
+
+Approach #1 brute force
+------------------------------
+
+-> we will iterate the source arr and for each index we will calculate leftSum from 0 to < i and rightSum from i+1 to < arr.length
+-> so inside for loop we will use two loop one for calcualting left sum and other for right sum and then compare and return index
+   if they are equal
+   
+   
+   for(let i=0;i<arr.length;i++){
+		let leftSum = 0;
+		for(let left=0;left<i;left++){
+			leftSum += arr[left];
+		}
+		
+		let rightSum = 0;
+		for(let right=i+1;right<arr.length;right++){
+			rightSum += arr[right];
+		}
+		
+		if(leftSum === rightSum){
+			return i;
+		}
+   }
+   
+   return -1;
+   
+TC - O(N2) i.e. nsuare
+SC - O (1)
+   
+ 
+Approach #2 Single Pass
+------------------------------
+
+
+- Calculate the totalSum of all elements in the array.
+- Now for each index in iteration we will find RightSum, validate if rightSum === leftSum and find leftSum
+- Since we already have TotalSum and we can find leftsum by adding each index element.
+- Note to find leftSum or RightSum we don't need current index elemtn but in leftSum we are adding and also in totalSum also it have
+- So while finding rightSum we need to deduct currnt index element and leftsum both from totalSum 
+
+
+function equilibriumIdx(arr){
+
+  let totalSum = 0;
+  let leftSum = 0;
+
+  for(let i=0;i<arr.length;i++){
+    totalSum += arr[i];
+  }
+
+  for(let i=0;i<arr.length;i++){
+    let rightSum = totalSum - arr[i] - leftSum;
+
+    if(leftSum === rightSum){
+      return i;
+    }
+
+    leftSum += arr[i];
+  }
+
+  return -1;
+  
+}
+
+console.log(equilibriumIdx([1, 3, 5, 2, 2]))
+
+Time Complexity: (O(n))
+Space Complexity: (O(1))

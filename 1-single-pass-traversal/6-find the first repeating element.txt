@@ -1,0 +1,73 @@
+Given an array of integers, find the first repeating element. 
+The first repeating element is the element whose first occurrence has the smallest index among all elements that appear more than once. If no element repeats, return -1.
+
+Input: arr = [10, 5, 3, 4, 3, 5, 6]
+Output: 5
+
+
+Approach #1 brute force
+-----------------------
+
+-> here we can use two nested for loops 
+-> outer loop will start from 0index and inner loop will start from i+1
+-> validate if arr[i] === arr[j] and first equivalent value will first repeating element
+
+function firstRepeatingEle(arr){
+
+  for(let i=0;i<arr.length;i++){
+    for(let j=i+1;j<arr.length;j++){
+      if(arr[i] === arr[j]){
+        return arr[i];
+      }
+    }
+  }
+
+  return -1;
+}
+
+console.log(firstRepeatingEle([10, 5, 3, 4, 3, 5, 6]));
+
+TC - O(N2) i.e. n square
+SC - O(1)
+
+
+Approach #2 single pass with hashing
+-------------------------------------
+
+-> this question we can solve it via hashing
+-> we will declare variable ele that is first repeating and its index eleIdx
+-> eleIdx we will assign to Infinity since first repeating element will have minimum index
+-> also declare a map and in that keep the key as element and value as its index
+-> then iterate the array and if elemtn is not present in map then add it and if present, fetch its index value
+   then check if this index is less than eleIdx and if yes then assin its value to it and also element.
+ 
+-> once loop iteration is completed ele variable will have element that if first repeating and also u got the index wch
+   is present in eleIdx
+
+function firstRepeatingEle(arr){
+
+  let map = new Map();
+  let minIdx = Infinity;
+  let ele = null;
+  for(let i=0;i<arr.length;i++){
+    if(map.has(arr[i])){
+      if(map.get(arr[i]) < minIdx){
+        minIdx = map.get(arr[i]);
+        ele = arr[i]
+      }
+    }else{
+      map.set(arr[i], i);
+    }
+  }
+
+  if(ele !== null){
+    return ele;
+  }
+
+  return -1;
+}
+
+console.log(firstRepeatingEle([10, 5, 3, 4, 3, 5, 6]));
+
+
+

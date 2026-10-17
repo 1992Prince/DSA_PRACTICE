@@ -1,0 +1,34 @@
+Given a binary array containing only 0 and 1, find the maximum number of consecutive ones.
+
+Input: arr = [1, 1, 0, 1, 1, 1, 0, 1]
+Output: 3
+
+
+Approach #1
+------------
+
+-> given arr is binary array and we need to count the frequency of maximum consectives 1
+-> we can declare two variables and one will hold the maxConsecutiveOnes count and other will hold the each consectives 1 count value
+-> if any arr[i] is not 1 then set count to 0 again.
+-> after incrementing count everytime validate if count > maxCount and if yes reassign maxCount
+
+function maxConsecutiveOnes(arr){
+
+  let maxCount = 0;
+  let count = 0;
+  for(let i=0;i<arr.length;i++){
+    if(arr[i] === 1){
+      count++;
+
+      if(count > maxCount){
+        maxCount = count;
+      }
+    }else{
+      count=0;
+    }
+  }
+
+  return maxCount;
+}
+
+console.log(maxConsecutiveOnes([1, 1, 0, 1, 1, 1, 0, 1]))

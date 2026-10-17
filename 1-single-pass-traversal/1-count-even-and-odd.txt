@@ -1,0 +1,7 @@
+Given an array of integers, count the number of even and odd numbers.
+
+Input : arr = [1, 2, 3, 4, 5, 6, 8]
+Output: [4,3]
+
+-> declare two variables evenCount and oddCount
+-> iterate the arr and if particular ele is divisible by 2 then incrment evenCount else increment oddCount

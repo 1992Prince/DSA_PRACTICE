@@ -1,0 +1,42 @@
+An array contains n distinct integers from the range 0 to n, with exactly one number missing. 
+Find the missing number.
+
+Input:arr = [3, 0, 1]
+Output: 2
+
+
+Approach #1 brute force
+-----------------------
+
+-> iterate from 0 to n and validate if each element is present in array or not
+-> we can use two loop, outer loop will iterate from 0 to n and inner loop will iterate given array
+-> and the number wch is not found in given arr will be the output
+
+TC - O(N2) i.e. n square
+
+
+Approach #2 formula based
+---------------------------
+
+-> find sum of all elements of given array 
+-> find sum of elements from 0 to n using formula i.e.
+   (n(n+1))/2
+   
+-> subtract given arr sum from forumula based sum and output value is missing number in array
+
+
+function missingNum(arr){
+
+  let n = arr.length;
+  let arrSum = 0;
+  let totalSum = (n * (n + 1))/2;
+
+  for(let i=0;i<arr.length;i++){
+    arrSum += arr[i];
+  }
+
+  return totalSum - arrSum;
+}
+
+console.log(missingNum([3,0,1]))
+

@@ -1,0 +1,201 @@
+
+
+// Q6 - Given a string and an integer k, find the longest contiguous substring containing at most k distinct characters.
+/**
+There are three important words here:
+- Contiguous: Characters must be next to each other. You cannot skip characters.
+- Distinct: Count unique character types, not how many times they appear.
+- At most k: You can have fewer than k distinct characters, or exactly k, but never more than k.
+
+Input: s = "aaaaaaaa" k = 2
+	Output: "aaaaaaaa"
+	Length = 8
+	Distinct characters = 1 (a)
+	Allowed distinct characters = at most 2
+	
+Input: s = "aaabbcccc" k = 2
+	Output: "aaabb"
+	Length = 5
+	Distinct characters = 2 (a, b)
+
+Input: s = "aaabbbcccc" k=2
+    Output: "bbbcccc"
+
+*/
+
+// first write code to print all substrigs of a string
+// you can print all substrings of a string by below nested for loop approach
+// make sure inner for loop j should <= str.length bcoz in substring method second parameter is not inclusive
+
+function allSubString(str) {
+
+    count = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        for (let j = i + 1; j <= str.length; j++) {
+            count++;
+            console.log(str.substring(i, j));
+        }
+    }
+
+    console.log();
+    console.log("Total Substrings are: ", count);
+    #36
+}
+
+maxSubString("aaabbccd")
+
+/**
+ - Now write logic for validating distinct characters in substring.
+ - Find the longest contiguous substring containing at most k distinct characters.
+ - distinctChars is set containing distinct characters in a string
+	 - distinctChars.size === k means exactly k distinct characters.
+	 - distinctChars.size <= k means at most k distinct characters and this is we need for our question
+*/
+
+
+// brute force approach using Set:
+// --------------------------------
+
+function allSubString(str, k) {
+    let maxLen = 0;
+    let bestStart = 0;
+    let bestEnd = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        for (let j = i + 1; j <= str.length; j++) {
+            let sub = str.substring(i, j);
+
+            // Count distinct characters
+            let distinctChars = new Set(sub);
+
+            // At most k distinct characters
+            if (distinctChars.size <= k) {
+                if (sub.length > maxLen) {
+                    maxLen = sub.length;
+                    bestStart = i;
+                    bestEnd = j;
+                }
+            }
+        }
+    }
+
+    return str.substring(bestStart, bestEnd);
+}
+
+console.log(allSubString("aaabbccd", 2)); // "aaabb"
+console.log(allSubString("eceba", 2)); // "ece"
+
+
+// sliding window approach using Set:
+// ----------------------------------
+
+/**
+- Initialize left = 0, maxLen = 0, bestStart = 0 and bestEnd = 0.
+- Run a for loop with right from 0 to str.length - 1 to expand the window.
+- Get the current window using str.substring(left, right + 1).
+- Create a Set from the current substring to count its distinct characters.
+- If the Set contains more than k distinct characters, shrink the window using a while loop:
+	- Increment left.
+	- Recalculate the substring and its Set.
+	- Repeat until the Set contains at most k distinct characters.
+
+- Once the window is valid, calculate its length using right - left + 1.
+- If the current window length is greater than maxLen, update maxLen, bestStart = left and bestEnd = right + 1.
+- After the loop finishes, return str.substring(bestStart, bestEnd).
+*/
+
+
+function longestSubstring(str, k) {
+    let left = 0;
+    let maxLen = 0;
+    let bestStart = 0;
+    let bestEnd = 0;
+
+    for (let right = 0; right < str.length; right++) {
+        // Get the current window
+        let sub = str.substring(left, right + 1);
+
+        // Count distinct characters
+        let distinctChars = new Set(sub);
+
+        // Shrink while the window is invalid
+        while (distinctChars.size > k) {
+            left++;
+
+            sub = str.substring(left, right + 1);
+            distinctChars = new Set(sub);
+        }
+
+        // Update the longest valid substring
+        let windowLen = right - left + 1;
+
+        if (windowLen > maxLen) {
+            maxLen = windowLen;
+            bestStart = left;
+            bestEnd = right + 1;
+        }
+    }
+
+    return str.substring(bestStart, bestEnd);
+}
+
+console.log(longestSubstring("aaabbccd", 2)); // "aaabb"
+console.log(longestSubstring("eceba", 2));    // "ece"
+
+
+/**
+Time and Space Complexity
+- Time Complexity: \(O(n^3)\) — There are \(O(n^2)\) possible substrings, and creating a Set for each substring can take up to \(O(n)\) time.
+- Auxiliary Space Complexity: \(O(n)\) — The substring and Set can each require up to \(O(n)\) space
+*/
+
+
+// - A frequency Map lets you solve the same problem in \(O(n)\) time and \(O(k)\) auxiliary space (for the maintained character frequencies, bounded by the number of distinct characters in a valid window).
+
+
+=======================================================================================================
+
+/**
+Q7 - Given a string and an integer k, find the longest contiguous substring containing exactly k distinct characters. Return an empty string if no such substring exists.
+	Input: s = "aabacbebebe", k = 3
+	Output: "cbebebe"
+
+*/
+
+function longestSubstring(str, k) {
+    let left = 0;
+    let maxLen = 0;
+    let bestStart = 0;
+    let bestEnd = 0;
+
+    for (let right = 0; right < str.length; right++) {
+        // Get the current window
+        let sub = str.substring(left, right + 1);
+
+        // Count distinct characters
+        let distinctChars = new Set(sub);
+
+        // Shrink while the window is invalid
+        while (distinctChars.size > k) {
+            left++;
+
+            sub = str.substring(left, right + 1);
+            distinctChars = new Set(sub);
+        }
+
+       if(distinctChars.size === k){
+        // Update the longest valid substring
+        let windowLen = right - left + 1; 
+        if (windowLen > maxLen) {
+            maxLen = windowLen;
+            bestStart = left;
+            bestEnd = right + 1;
+        }
+       }
+    }
+
+    return str.substring(bestStart, bestEnd);
+}
+
+console.log(longestSubstring("aabacbebebe", 3));    // "cbebebe"

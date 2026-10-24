@@ -1,0 +1,78 @@
+Q6 - Given two strings text and pattern, count how many substrings of text are anagrams of pattern. An anagram contains exactly the same characters with the same frequencies, although the order may differ. Eg: for, fro, ofr are considered anagram
+Input: text = "forxxorfxdofr", pattern = "for"
+Output: 3
+
+
+function subStringsCount(str, pattern){
+
+  let count=0;
+  let sorted = pattern.split('').sort().join('');
+
+  for(let i=0;i<str.length;i++){
+    let substr = str.substring(i,i+pattern.length);
+    let substrSorted = substr.split('').sort().join('');
+    if(sorted === substrSorted){
+      count++;
+    }
+  }
+
+  return count;
+}
+
+console.log(subStringsCount("forxxorfxdofr", "for"))
+
+
+any better approach?
+
+
+================================================
+
+Q7
+
+
+=======================================================
+
+
+Q8 - Given strings s and p, return the starting indices of all substrings of s that are anagrams of p
+Input: s = "cbaebabacd", p = "abc"
+Output: [0, 6]
+
+
+function subStringsCount(str, pattern){
+
+  let arr = [];
+  let sorted = pattern.split('').sort().join('');
+
+  for(let i=0;i<str.length;i++){
+    let substr = str.substring(i,i+pattern.length);
+    let substrSorted = substr.split('').sort().join('');
+    if(sorted === substrSorted){
+      arr.push(i);
+    }
+  }
+
+  return arr;
+}
+
+console.log(subStringsCount("cbaebabacd", "abc"))
+
+
+any better approach?
+
+
+
+==================================================================
+
+Q9  - Given an integer array and an integer k, return the maximum element in every contiguous subarray of size k
+
+Input: arr = [1, 3, -1, -3, 5, 3, 6, 7], k = 3
+
+Output: [3, 3, 5, 5, 6, 7]
+
+
+=================================================================
+
+Q10
+
+
+

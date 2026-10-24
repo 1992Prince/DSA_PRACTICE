@@ -1,0 +1,276 @@
+Sliding Window Pattern
+
+Type 1: Fixed-size Sliding Window
+
+brute force approach:
+	-> you can use the nested loops
+	-> outer loop will iterate the each element of array and will iterate till arr.length-k
+	-> inner loop will iterate from i till i+7 and will produce all subarrays and gets it sum or product etc as per question
+	-> then update the overall value as asked in question
+	
+	-> TC will O(N2) i.e. n square
+
+sliding window approach
+
+-> here k length window will be formed and this window will move forward by removing previous window first element and
+   adding next element to window
+
+-> for first window calculate the sum, product etc as per question
+-> then update the overall_sum etc 
+-> then again another for loop from k till arr.length-1 and get sum by removing previous window first element and
+   adding next window element
+So:
+1. Process the first window
+2. Slide the window one position at a time
+3. Add the incoming element
+4. Remove the outgoing element
+5. Update the answer
+
+
+
+Q1 - Find the maximum sum of any three consecutive elements.
+
+Input: arr = [2, 1, 5, 1, 3, 2], k=3
+Output: 9
+
+
+function maxSum(arr,k){
+
+  let maxSum = -Infinity;
+  let sum = 0;
+
+  for(let i=0;i<k;i++){
+    sum += arr[i];
+  }
+
+   for(let i=k;i<arr.length;i++){
+     // here i-k will remove the prev window ist ele
+    sum = sum - arr[i-k] + arr[i];
+    maxSum = Math.max(sum, maxSum);
+  }
+
+  return maxSum;
+  
+}
+
+console.log(maxSum([2, 1, 5, 1, 3, 2], 3)); # 9
+
+
+------------------------------------------------------
+
+Q2 - Find the maximum product of any three consecutive elements
+
+e.g. arr = [2, 1, 5, 1, 3, 2], k=3
+     output: 15
+	 
+
+with above same approach:
+
+	function maxProd(arr,k){
+
+	  let maxProd = -Infinity;
+	  let prod = 1;
+
+	  for(let i=0;i<k;i++){
+		prod *= arr[i];
+	  }
+
+	   for(let i=k;i<arr.length;i++){
+		prod = Math.floor(prod / arr[i-k]) * arr[i];
+		maxProd = Math.max(prod, maxProd);
+	  }
+
+	  return maxProd;
+	  
+	}
+
+console.log(maxProd([2, 1, 5, 1, 3, 2], 3)); # 15
+
+but if you will give below arr as input, you will not get proper output?
+
+console.log(maxProd([0, 2, 1, 5, 1, 3, 2], 3)); # NaN
+
+reason is one of elemnt in given arr is 0 and multiplication with 0 becomes 0 and division with 0 gives arithmetic exception
+0/0
+
+So we need to handle these cases seprately
+
+Input: arr = [0, 2, 1, 5, 1, 3, 2], k=3
+Output: 15
+
+approach, if 0 is coming in arr element then before calculating prod and performing division operation validate
+if element is not 0
+
+	function maxProd(arr,k){
+
+	  let maxProd = -Infinity;
+	  let prod = 1;
+
+	  for(let i=0;i<k;i++){
+		if(arr[i] !== 0){
+		  prod *= arr[i];
+		}
+	  }
+
+	   for(let i=k;i<arr.length;i++){
+		 // if arr[i-k] is 0 then ignore
+		if(arr[i-k] !== 0){
+		  prod = Math.floor(prod / arr[i-k]);
+		}
+		 // if arr[i] is 0 then ignore
+		 if(arr[i] !== 0){
+		   prod = prod * arr[i];
+		 }
+		maxProd = Math.max(prod, maxProd);
+	  }
+
+	  return maxProd;
+	  
+	}
+
+console.log(maxProd([0, 2, 1, 5, 1, 3, 2], 3)); # 15
+
+----------------------------------------------------------
+
+Q3 - Average of every subarray of size k
+	Input: arr = [0, 2, 1, 5, 1, 3, 2], k=3
+	Output: [1, 2, 2, 3, 2]
+	
+	function findAvg(arr,k){
+
+  let avgArr = [];
+  let sum = 0;
+
+  // avg of first window
+  for(let i=0;i<k;i++){
+    sum += arr[i];
+  }
+  
+  let avg = Math.floor(sum/k);
+  avgArr.push(avg);
+
+  // avg for next windows
+  for(let i=k;i<arr.length;i++){
+    sum = sum - arr[i-k] + arr[i]; // get next window sum
+    let avg = Math.floor(sum/k);
+    avgArr.push(avg);
+  }
+
+  return avgArr;
+  
+}
+
+console.log(findAvg([0, 2, 1, 5, 1, 3, 2], 3)); #[ 1, 2, 2, 3, 2 ]
+
+
+----------------------------------------------------------
+
+Q4 - Maximum number of vowels in a substring of length k
+    str = "abciiidef"
+	k=3
+	output = 3
+	
+brute force approach - same two nested for loop
+
+sliding window approach - 
+
+function maxVowelsCount(arr,k){
+
+  let vowelsArr = ['a','e','i','o','u'];
+  let max_count = -Infinity;
+  let count = 0;
+
+  for(let i=0;i<k;i++){
+    if(vowelsArr.includes(arr[i])){
+      count++;
+    }
+  }
+
+  max_count = Math.max(count, max_count);
+
+  for(let i=k;i<arr.length;i++){
+    // if previous window 1st ele is vowel decrement it
+    if(vowelsArr.includes(arr[i-k])){
+      count--;
+    }
+
+    // if next window ith ele is vowel increment it
+    if(vowelsArr.includes(arr[i])){
+      count++;
+    }
+
+    // assign the max count to max_count
+    max_count = Math.max(count, max_count);
+  }
+
+    return max_count;
+  
+}
+
+console.log(maxVowelsCount("abciiidef", 3));
+
+-------------------------------------------------------------------
+
+Q5 - First negative number in every window of size k.
+
+    Given an array arr[] and an integer k, return an array containing the first negative number in every contiguous subarray (window) of size k. 
+	If a window has no negative numbers, return 0 for that window.
+	
+	arr = [12, -1, -7, 8, -15, 30, 16, 28], k = 3
+	output = [-1, -1, -7, -15, -15, 0]
+	
+
+Intuition — First Negative Number in Every Window of Size K
+
+1. We will use one for loop to traverse the array and track the window using start and end. start represents the starting index of the current window, and end represents the index of the element currently being processed. The queue will store the indices of negative numbers, not their values.
+
+2. For every end index, check whether arr[end] is negative. If it is, add its index to the queue.
+
+3. When the window moves forward, remove the indices of negative numbers that are outside the current window. 
+We check whether queue[0] < start; if true, remove that index using queue.shift().
+
+4. Check whether the window is complete using end >= start + k - 1. If complete:
+	- If the queue is not empty, add arr[queue[0]] to the result because it is the first negative number in the window.
+	- If the queue is empty, add 0 because the window contains no negative numbers.
+	- Increment start to move to the next window.
+
+5. After the loop finishes, return the result array.
+
+
+function findNegativesNums(arr, k) {
+  let neg_nums = [];
+  let queue = [];
+  let start = 0;
+
+  for (let end = 0; end < arr.length; end++) {
+    // Add the index if the current element is negative
+    if (arr[end] < 0) {
+      queue.push(end);
+    }
+
+    // Remove negative indices outside the current window
+    while (queue.length > 0 && queue[0] < start) {
+      queue.shift();
+    }
+
+    // Check whether the window is complete
+    if (end >= start + k - 1) {
+      if (queue.length > 0) {
+        neg_nums.push(arr[queue[0]]);
+      } else {
+        neg_nums.push(0);
+      }
+
+      // Move to the next window
+      start++;
+    }
+  }
+
+  return neg_nums;
+}
+
+console.log(
+  findNegativesNums([12, -1, -7, 8, -15, 30, 16, 28], 3)
+);
+
+// Output: [-1, -1, -7, -15, -15, 0]

@@ -1,0 +1,119 @@
+Q - Given a binary array containing only 0s and 1s and an integer k, 
+    find the longest contiguous subarray of 1s you can obtain by flipping at most k zeros to ones.
+	
+	Input: arr = [1, 1, 0, 0, 1, 1, 1, 0, 1], k = 2
+	Output: [1, 1, 0, 0, 1, 1, 1]
+	
+	
+/**
+Approach (Brute Force)
+	1. Start each subarray from index i.
+	2. Set zeroCount = 0 for each starting index.
+	3. Expand the subarray using index j and count the zeros.
+	4. If zeroCount > k, break because the subarray is invalid.
+	5. Calculate the subarray length: j - i + 1.
+	6. If the length is greater than maxLen, update maxLen, bestStart, and bestEnd.
+	7. Return the longest subarray using arr.slice(bestStart, bestEnd + 1).
+	
+Time Complexity: \(O(n^2)\)
+Space Complexity: \(O(1)\) auxiliary space.
+*/
+
+function maxConsecutiveOnes(arr, k) {
+    let maxLen = 0;
+    let bestStart = -1;
+    let bestEnd = -1;
+
+    for (let i = 0; i < arr.length; i++) {
+        let zeroCount = 0;
+
+        for (let j = i; j < arr.length; j++) {
+
+            // Count zeros in the current subarray
+            if (arr[j] === 0) {
+                zeroCount++;
+            }
+
+            // Stop when we exceed the allowed flips
+            if (zeroCount > k) {
+                break;
+            }
+
+            // Current subarray is valid
+            let len = j - i + 1;
+
+            if (len > maxLen) {
+                maxLen = len;
+                bestStart = i;
+                bestEnd = j;
+            }
+        }
+    }
+
+    return bestStart === -1
+        ? []
+        : arr.slice(bestStart, bestEnd + 1);
+}
+
+console.log(maxConsecutiveOnes([1, 1, 0, 0, 1, 1, 1, 0, 1], 2));
+// [1, 1, 0, 0, 1, 1, 1]
+
+console.log(maxConsecutiveOnes([1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1], 2));
+// [1, 1, 0, 0, 1, 1, 1]
+
+
+==============================================================
+
+
+/**
+Sliding Window Approach:
+Approach (Sliding Window)
+
+1. Initialize `start = 0`, `zeroCount = 0`, and `maxLen = 0`.
+2. Move `end` from left to right to expand the window.
+3. If `arr[end] === 0`, increment `zeroCount`.
+4. While `zeroCount > k`, shrink the window by moving `start` forward and update `zeroCount` if a zero leaves.
+5. Calculate the window length: `end - start + 1`.
+6. If the length exceeds `maxLen`, update `maxLen`, `bestStart`, and `bestEnd`.
+7. Return the longest subarray using `arr.slice(bestStart, bestEnd + 1)`.
+
+Time: (O(n)) | Auxiliary Space: (O(1))
+
+*/
+
+function maxConsecutiveOnes(arr, k){
+    
+    let zeroCount = 0;
+    let maxLen = 0;
+    let bestStart = -1;
+    let bestEnd = -1;
+    let start = 0;
+    
+    for(let end=0;end<arr.length;end++){
+        
+        if(arr[end] === 0){
+            zeroCount++;
+        }
+        
+        // shrink window when zeroCount is more
+        while(zeroCount > k){
+            if(arr[start] === 0){
+                zeroCount--;
+            }
+            start++;
+        }
+        
+        // logic to find maxLen subarray
+        let len = end - start + 1;
+        if (len > maxLen) {
+                maxLen = len;
+                bestStart = start;
+                bestEnd = end;
+            }
+    }
+    
+    return arr.slice(bestStart, bestEnd+1);
+}
+
+console.log(maxConsecutiveOnes([1, 1, 0, 0, 1, 1, 1, 0, 1], 2))
+console.log(maxConsecutiveOnes([1, 1, 0, 0, 1, 1, 1, 0, 1,1,1,1], 2))

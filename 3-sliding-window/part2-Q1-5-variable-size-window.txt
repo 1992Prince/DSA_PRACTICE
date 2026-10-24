@@ -1,0 +1,399 @@
+Varaible Sliding Window Qs
+------------------------------
+
+
+1) Given an array of positive integers and an integer k, find the longest contiguous subarray whose sum is exactly equal to k.
+
+	Input: arr = [1, 2, 1, 1, 1, 3, 4, 2], k =4
+	Output: [1,2,1] 
+
+
+
+
+function longestSubarrLen(arr, k) {
+
+    // Step 1: Initialize sliding window variables
+    let start = 0;
+    let maxLen = 0;
+    let maxSum = 0;
+
+    // Store the indices of the longest valid subarray
+    let bestStart = -1;
+    let bestEnd = -1;
+
+    // Step 2: Expand the window by moving end
+    for (let end = 0; end < arr.length; end++) {
+
+        // Step 3: Add the current element to the window sum
+        maxSum += arr[end];
+
+        // Step 4, 5, 6: Shrink the window while sum exceeds k
+        while (maxSum > k) {
+            maxSum -= arr[start]; // Remove the leftmost element
+            start++;              // Move start to the right
+        }
+
+        // Step 7: Check whether the current window sum equals k
+        if (maxSum === k) {
+
+            // Calculate the current window length
+            let subArrLen = end - start + 1;
+
+            // Update only if this subarray is longer than the best one
+            if (subArrLen > maxLen) {
+                maxLen = subArrLen;
+
+                // Save the boundaries of the longest subarray
+                bestStart = start;
+                bestEnd = end;
+            }
+        }
+    }
+
+    // Step 8: Return the actual subarray, or [] if none was found
+    if (bestStart === -1) return [];
+
+    return arr.slice(bestStart, bestEnd + 1);
+}
+
+console.log(
+    longestSubarrLen([1, 2, 1, 1, 1, 3, 4, 2], 4)
+);
+// Output: [1, 2, 1]
+
+
+
+===========================================================
+
+
+2. Given an array of positive integers and an integer k, find the smallest contiguous subarray whose sum is exactly equal to k.
+
+Input: arr = [1, 2, 1, 1, 1, 3, 4, 2], k =4
+Output: [4] 
+
+
+
+function smallestSubarrLen(arr, k) {
+
+    // Step 1: Initialize sliding window variables
+    let start = 0;
+    let minLen = Infinity; // Find the smallest length
+    let maxSum = 0;
+
+    // Store indices of the smallest valid subarray
+    let bestStart = -1;
+    let bestEnd = -1;
+
+    // Step 2: Expand the window by moving end
+    for (let end = 0; end < arr.length; end++) {
+
+        // Step 3: Add current element to window sum
+        maxSum += arr[end];
+
+        // Step 4, 5, 6: Shrink while sum exceeds k
+        while (maxSum > k) {
+            maxSum -= arr[start];
+            start++;
+        }
+
+        // Step 7: Check whether the window sum equals k
+        if (maxSum === k) {
+
+            // Calculate current window length
+            let subArrLen = end - start + 1;
+
+            // Update if this subarray is smaller
+            if (subArrLen < minLen) {
+                minLen = subArrLen;
+
+                // Save indices of the smallest subarray
+                bestStart = start;
+                bestEnd = end;
+            }
+        }
+    }
+
+    // Step 8: Return the actual subarray, or [] if none exists
+    if (bestStart === -1) return [];
+
+    return arr.slice(bestStart, bestEnd + 1);
+}
+
+console.log(
+    smallestSubarrLen([1, 2, 1, 1, 1, 3, 4, 2], 4)
+);
+// Output: [4]
+
+
+
+======================================================================================
+
+
+3. Given an array of positive integers and a target k, 
+   find the minimum length of a contiguous subarray whose sum is greater than or equal to k.
+   
+You need to find the shortest contiguous subarray whose sum is equal to k OR greater than k.
+
+In mathematical terms: sub of minimum length subarray >= k
+
+
+For example, arr = [1, 2, 2, 3], k = 6:
+- [3] → sum = 3 ❌
+- [2, 3] → sum = 5 ❌
+- [2, 2, 3] → sum = 7 ✅, length = 3
+- [1, 2, 2, 3] → sum = 8 ✅, length = 4
+
+Answer: 3, because [2, 2, 3] is the shortest contiguous subarray whose sum is at least 6.
+
+
+   Input:arr = [1,2,2,3] k = 8
+   Output: 4
+   
+Correct logic
+The order matters:
+	1. Expand the window.
+	2. While maxSum >= k, record the current window length.
+	3. Remove the leftmost element and shrink the window.
+	4. Repeat while the window remains valid.
+	
+	
+Let's dry run the variable-length sliding window step by step. 👇
+
+Input: `arr = [2, 3, 1, 2, 4, 3]`, `k = 5`
+
+Goal: Find the minimum length of a contiguous subarray whose sum is `>= 5`.
+
+### Dry run
+
+| `end` | Action   | Window    | `maxSum` | Length | `minLen` |
+| ----- | -------- | --------- | -------- | ------ | -------- |
+| 0     | Add 2    | `[2]`     | 2        | —      | ∞        |
+| 1     | Add 3    | `[2,3]`   | 5        | 2      | 2        |
+| 1     | Remove 2 | `[3]`     | 3        | —      | 2        |
+| 2     | Add 1    | `[3,1]`   | 4        | —      | 2        |
+| 3     | Add 2    | `[3,1,2]` | 6        | 3      | 2        |
+| 3     | Remove 3 | `[1,2]`   | 3        | —      | 2        |
+| 4     | Add 4    | `[1,2,4]` | 7        | 3      | 2        |
+| 4     | Remove 1 | `[2,4]`   | 6        | 2      | 2        |
+| 4     | Remove 2 | `[4]`     | 4        | —      | 2        |
+| 5     | Add 3    | `[4,3]`   | 7        | 2      | 2        |
+| 5     | Remove 4 | `[3]`     | 3        | —      | 2        |
+
+### Final answer: `2`
+
+The shortest valid subarrays are `[2, 3]`, `[2, 4]`, and `[4, 3]`. Each has length `2` and a sum greater than or equal to `5`.
+
+Key observation: Whenever `maxSum >= k`, first update `minLen`, then shrink the window. Once the sum falls below `k`, resume expanding with `end`.
+	 
+function minSubarrLen(arr, k) {
+
+    let start = 0;
+    let minLen = Infinity;
+    let maxSum = 0;
+
+    let bestStart = -1;
+    let bestEnd = -1;
+
+    for (let end = 0; end < arr.length; end++) {
+
+        // Add the current element
+        maxSum += arr[end];
+
+        // Keep shrinking while sum is >= k
+        while (maxSum >= k) {
+
+            // Calculate the current valid window length
+            let subArrLen = end - start + 1;
+
+            // Save the smallest valid window
+            if (subArrLen < minLen) {
+                minLen = subArrLen;
+                bestStart = start;
+                bestEnd = end;
+            }
+
+            // Remove the leftmost element
+            maxSum -= arr[start];
+            start++;
+        }
+    }
+
+    // Return minimum length, or 0 if no valid window exists
+    if (bestStart === -1) return 0;
+
+    return minLen;
+}
+
+console.log(minSubarrLen([1, 2, 2, 3], 6));
+// Output: 3
+
+
+======================================================================================
+
+
+4. Given an array of integers and an integer k, find the longest contiguous subarray containing exactly k odd numbers.
+
+Input: arr = [2, 1, 3, 4, 5, 6, 7, 8], k = 2
+Output: [4,5,6,7,8]
+
+- Subarray: [4, 5, 6, 7, 8]
+- Odd numbers: 5, 7 → exactly 2 odd numbers
+- Length: 5
+
+Algo
+
+1. Declare start = 0, count = 0, maxLen = 0, bestStart = -1 and bestEnd = -1.
+
+2. Iterate through the array using end, from index 0 to the last index.
+
+3. Check whether the current array element is odd. If arr[end] is odd, increment count. If it is even, count remains unchanged.
+
+4. There will be a point where the current element makes count > k. In that case, use a while loop to shrink the window until count <= k.
+- Remove the starting element from the window.
+- If arr[start] is odd, decrement count.
+- Increment start.
+- Repeat until count <= k.
+5. After shrinking, the current window will have count === k or count < k.
+
+6. Check whether count === k. If yes, calculate the current window length using end - start + 1.
+
+7. Compare currWinArrLen with maxLen. If the current window is longer:
+- Update maxLen.
+- Store start in bestStart.
+- Store end in bestEnd.
+8. Continue iterating until all array elements have been processed.
+
+9. Return the subarray using arr.slice(bestStart, bestEnd + 1). If no valid subarray was found, return an empty array.
+
+
+Dry Run
+-------
+
+function maxLenArr(arr, k) {
+  // Initialize variables
+  let maxLen = 0;
+  let count = 0;
+  let start = 0;
+
+  let bestStart = -1;
+  let bestEnd = -1;
+
+  // Iterate through the array using end
+  for (let end = 0; end < arr.length; end++) {
+
+    // If the current element is odd, increment count
+    if (arr[end] % 2 !== 0) {
+      count++;
+    }
+
+    // If odd count exceeds k, shrink the window
+    while (count > k) {
+
+      // If the starting element is odd, decrement count
+      if (arr[start] % 2 !== 0) {
+        count--;
+      }
+
+      // Move the start pointer forward
+      start++;
+    }
+
+    // If the window contains exactly k odd numbers
+    if (count === k) {
+
+      // Calculate the current window length
+      let currWinArrLen = end - start + 1;
+
+      // Check whether this is the longest window so far
+      if (currWinArrLen > maxLen) {
+        maxLen = currWinArrLen;
+        bestStart = start;
+        bestEnd = end;
+      }
+    }
+  }
+
+  // Return the longest valid subarray
+  if (bestStart === -1) {
+    return [];
+  }
+
+  return arr.slice(bestStart, bestEnd + 1);
+}
+
+console.log(maxLenArr([2, 1, 3, 4, 5, 6, 7, 8], 2));
+// Output: [4, 5, 6, 7, 8]
+
+
+-----------------------------------------------------------------
+
+5. Given a string, find the longest contiguous substring in which every character appears only once.
+
+	Input: s = "abcabcbb"
+	Output: "abc"
+	
+	1. Declare a Set to track distinct characters, start = 0, maxLen = 0, bestStart = 0, and bestEnd = -1.
+
+	2. Iterate through the string from end = 0 to the last index.
+
+	3. Check whether the current character s[end] is already present in the Set.
+
+	4. If the character is present, the current window has a duplicate. Use a while loop to shrink the window until that character is no longer in the Set:
+	- Remove s[start] from the Set.
+	- Increment start.
+	- Repeat while s[end] is still in the Set.
+	5. Add the current character s[end] to the Set.
+
+	6. Calculate the current window length using end - start + 1.
+
+	7. If the current length is greater than maxLen, update maxLen, bestStart, and bestEnd.
+
+	8. Continue until the entire string has been traversed.
+
+	9. Return the longest substring using s.slice(bestStart, bestEnd + 1).
+
+
+dry run?
+	
+
+
+function longestSubArr(arr){
+
+  let start = 0;
+  let set = new Set();
+  let maxLen = -Infinity;
+
+  let subEnd = -1;
+  let bestEnd = -1;
+
+  for(let end = 0;end<arr.length;end++){
+
+    if(set.has(arr[end])){
+
+      while(set.has(arr[end])){
+        set.delete(arr[start]);
+        start++;
+      }
+    }
+
+    if(!set.has(arr[end])){
+      set.add(arr[end]);
+    }
+
+    let currLen = end - start + 1;
+    if (currLen > maxLen) {
+        maxLen = currLen;
+        bestStart = start;
+        bestEnd = end;
+      }
+  }
+
+  return arr.slice(bestStart, bestEnd + 1);
+}
+
+console.log(longestSubArr("abcabcbb"));       # abc
+console.log(longestSubArr("abcabdefghicbb")); # cabdefghi
+
+
+-----------------------------------------------------------------------------
+
